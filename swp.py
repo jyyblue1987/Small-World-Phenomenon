@@ -95,4 +95,25 @@ def bfs(graph, start):
 
     return distance_list
 
-bfs(loadGraph(edgeFilename), 26)
+def distanceDistribution(G):
+    histogram = [0] * (len(G))
+
+    for i in range(len(G)):
+        print("Calculating Distance From", i)
+        distance_list = bfs(G, i)
+
+        for d in distance_list:
+            histogram[d] += 1
+
+    # calculate percent
+    sum = 0
+    for h in histogram:
+        sum += h
+
+    for i in range(len(histogram)):
+        histogram[i] /= sum
+
+    return histogram
+
+histogram = distanceDistribution(loadGraph(edgeFilename))
+print(histogram)
