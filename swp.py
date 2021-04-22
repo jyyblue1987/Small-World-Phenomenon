@@ -82,6 +82,7 @@ def bfs(graph, start):
         # pop shallowest node (first node) from queue
         node = queue.pop(0)
 
+        # get distance for current node
         distance = distance_list[node]
 
         neighbors = graph[node]
@@ -89,7 +90,7 @@ def bfs(graph, start):
         # add neighbours of node to queue
         for i in neighbors:
             if visited[i] == False:
-                distance_list[i] = distance + 1
+                distance_list[i] = distance + 1 # increase distance for neighbors by 1
                 queue.append(i)
                 visited[i] = True
 
@@ -102,18 +103,34 @@ def distanceDistribution(G):
         print("Calculating Distance From", i)
         distance_list = bfs(G, i)
 
+        # calculate histogram based on distance list
         for d in distance_list:
             histogram[d] += 1
 
-    # calculate percent
+    # convert histogram to percent
+    # get total sum of histogram
     sum = 0
     for h in histogram:
         sum += h
 
+    # make percent for each distance bin
     for i in range(len(histogram)):
-        histogram[i] /= sum
+        histogram[i] /= (sum / 100)
 
     return histogram
 
 histogram = distanceDistribution(loadGraph(edgeFilename))
 print(histogram)
+
+# cumulative probabilty
+sum = 0
+for i in range(1, len(histogram)):
+    sum += histogram[i]
+    if sum >= 99.97:
+        break
+
+    print(i, sum)
+
+# To what extent does this network satisfy the small world phenomenon? 
+# According to this data, all pairs of people are at most eight social connections away from each other
+# and most pairs of people() are at most seven social connections away from each other
