@@ -73,14 +73,15 @@ def bfs(graph, start):
     visited = [False] * (len(graph))
     distance_list = [0] * (len(graph))
     # keep track of nodes to be checked
-    queue = [start]
+    # queue = [start]
     visited[start] = True
-    # queue = MyQueue(start)
+    queue = MyQueue(len(graph))
+    queue.enqueue(start)
     # keep looping until there are nodes still to be checked
     distance_list[start] = 0
-    while queue:
+    while queue.Empty() == False:
         # pop shallowest node (first node) from queue
-        node = queue.pop(0)
+        node = queue.dequeue()
 
         # get distance for current node
         distance = distance_list[node]
@@ -91,7 +92,7 @@ def bfs(graph, start):
         for i in neighbors:
             if visited[i] == False:
                 distance_list[i] = distance + 1 # increase distance for neighbors by 1
-                queue.append(i)
+                queue.enqueue(i)
                 visited[i] = True
 
     return distance_list
