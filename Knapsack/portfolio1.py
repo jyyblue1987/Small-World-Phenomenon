@@ -4,9 +4,20 @@ def loadInvestments(filename):
     lines = fp.readlines()
 
     investments = []
+    i = 0
     for line in lines:
+        line = line.strip()
+        if line.strip() == '':
+            continue
+        i = i + 1
+        if i <= 2: # Continue header and total average line
+            continue
+
         vals = line.split(",")
-        row = (vals[0], int(vals[1]), int(vals[2]))
+        latest_price = int(vals[len(vals) - 1])
+        last_year_price = int(vals[len(vals) - 13])
+        profit = latest_price - last_year_price
+        row = (vals[1], latest_price, profit)
 
         investments.append(row)
 
@@ -15,24 +26,26 @@ def loadInvestments(filename):
     return investments
 
 
-def optimizeInvestments(investments, limit):
+def optimizeInvestments(investments, limit, step):
     n = len(investments)
 
-    K = [[0 for x in range(limit + 1)] for x in range(n + 1)]
-    track = [[0 for x in range(limit + 1)] for x in range(n + 1)] 
+    step_count = limit // step
+
+    K = [[0 for x in range(step_count + 1)] for x in range(n + 1)]
+    track = [[0 for x in range(step_count + 1)] for x in range(n + 1)] 
 
     # Buiuld table K[][] in bottom up manner
     for i in range(n + 1):
-        for w in range(limit + 1):            
+        for w in range(step_count + 1):            
             if i == 0 or w == 0: # the base cases, when we don’t select any investments, nomatter how much money we have to spend (top row), then we get no return on investment
                 K[i][w] = 0
                 track[i][w] = 0
             else:
-                wt = investments[i - 1][1]
+                wt = investments[i - 1][1] // step
                 if w < wt:
                     K[i][w] = K[i - 1][w]                    
                 else:
-                    val1 = investments[i - 1][2] + K[i - 1][w - wt]
+                    val1 = investments[i - 1][2] // step + K[i - 1][w - wt]
                     val2 = K[i - 1][w]
                     if val1 > val2:
                         K[i][w] = val1
@@ -42,16 +55,15 @@ def optimizeInvestments(investments, limit):
                 
     # at the end to trace back through these winning options. 
     nn = n
-    ww = limit
+    ww = step_count
     sols = []
     value = 0
     while nn > 1:
         if track[nn][ww] == 1:
             sols.append(nn - 1)            
-            ww = ww - investments[nn - 1][1]
-
+            ww = ww - investments[nn - 1][1] // step
             value = value + investments[nn - 1][2]
-        
+
         nn = nn - 1
 
     sols.reverse()
@@ -63,9 +75,7 @@ def optimizeInvestments(investments, limit):
     
     return value, selected  # goal location in the table,  lower-right corner
 
-investments = loadInvestments("input.txt")
-value, sol = optimizeInvestments(investments, 50)
+investments = loadInvestments("Metro.csv")
+value, sol = optimizeInvestments(investments, 1000000, 1000)
 
 print(value, sol)
-
-
