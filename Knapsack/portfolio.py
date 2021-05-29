@@ -50,7 +50,7 @@ def optimizeInvestments(investments, limit, step):
     K = [[0 for x in range(step_count + 1)] for x in range(n + 1)]
     track = [[0 for x in range(step_count + 1)] for x in range(n + 1)] 
 
-    # Buiuld table K[][] in bottom up manner
+    # Build table K[][] in bottom up manner
     for i in range(n + 1):
         for w in range(step_count + 1):            
             if i == 0 or w == 0: # the base cases, when we don’t select any investments, nomatter how much money we have to spend (top row), then we get no return on investment
