@@ -53,5 +53,5 @@ print(chainMatrix(dims))
 # print(chainMatrix(dims))
 
 
-dims = [4, 10, 3, 12, 20, 7]
-print(chainMatrix(dims))
+# dims = [4, 10, 3, 12, 20, 7]
+# print(chainMatrix(dims))
