@@ -62,7 +62,7 @@ def mst(g):
             # Only care about the ones that are adjacent to u
             if g[u[0]][v[0]] > 0:
                 # Update the distances if necessary
-                if g[u[0]][v[0]] < v[1]:
+                if g[u[0]][v[0]] < v[1]:    # Update the key only if graph[u][v] is smaller than key
                     v[1] = g[u[0]][v[0]]            
                     parent[v[0]] = u[0]        
     print(tree)
